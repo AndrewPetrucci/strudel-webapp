@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strudel Live Coding</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='.9em' font-size='28'>🌀</text></svg>">
+  <link rel="stylesheet" href="styles.css">
+  <script type="importmap">
+  {
+    "imports": {
+      "@strudel/core": "https://unpkg.com/@strudel/core@1.2.6/dist/index.mjs",
+      "fraction.js": "https://unpkg.com/fraction.js@5.2.1/dist/fraction.mjs",
+      "@kabelsalat/web": "https://unpkg.com/@kabelsalat/web@0.4.1/dist/index.mjs",
+      "@kabelsalat/core": "https://unpkg.com/@kabelsalat/core@0.4.0/dist/index.mjs",
+      "@kabelsalat/lib": "https://unpkg.com/@kabelsalat/lib@0.4.1/dist/index.mjs"
+    }
+  }
+  </script>
+</head>
+<body>
+  <header class="header-row">
+    <div>
+      <h1>Strudel Live Coding</h1>
+      <p>Edit patterns below. Visit <a href="https://strudel.cc" target="_blank" rel="noopener">strudel.cc</a> for docs.</p>
+    </div>
+    <div class="header-buttons">
+      <button type="button" id="run-btn" class="run-btn" title="Run pattern">Run</button>
+      <button type="button" id="stop-btn" class="stop-btn" title="Stop playback">Stop</button>
+      <button type="button" id="update-btn" class="update-btn" title="Update/run pattern (Ctrl+S)">Update</button>
+    </div>
+  </header>
+
+  <main>
+    <div>
+      <div class="pallet-buttons" aria-label="Palette buttons (loaded from pallet-buttons.csv)"></div>
+      <section class="repl-container">
+        <strudel-editor id="strudel-repl">
+          <!--
+  s("bd hh*2 cp").speed(1.2)
+          -->
+        </strudel-editor>
+      </section>
+    </div>
+  </main>
+
+  <script src="https://unpkg.com/@strudel/repl@latest"></script>
+  <script type="module" src="gamepad-loader.js"></script>
+  <script src="pallet-logic.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

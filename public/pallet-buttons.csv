@@ -1,0 +1,13 @@
+id,name,code,cursorEndOfLineOffset,insertIndex,imports,consts
+add-stack,Add Stack,"stack(
+  
+)",2,9,,
+add-erika-base,Add Erika Base,"note(""<[c2 c3]*4 [bb1 bb2]*4 [f2 f3]*4 [eb2 eb3]*4>"")
+  .sound(""sawtooth"").lpf(800)",0,0,,
+add-drum-stack-1,Add Drum Stack 1,"stack(
+  sound(""hh*16"").gain(""[.25 1]*4""),
+  sound(""bd*4,[~ sd:1]*2"")
+)",0,0,,
+add-noise-snare,Add Noise Snare,"sound(""bd*2,<white pink brown>*8"")
+.decay(.04).sustain(0)._scope()",0,0,,
+add-gamepad,Add Gamepad,"note(""c a f e"").mask(gp.a)",0,0,,"const gp = gamepad(0)"

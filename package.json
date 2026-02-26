@@ -1,0 +1,14 @@
+{
+  "name": "strudel-webapp",
+  "version": "1.0.0",
+  "description": "Node.js server serving a webpage with Strudel iframe",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "node --test test/pallet-output.test.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0"
+  }
+}
