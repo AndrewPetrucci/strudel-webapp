@@ -177,9 +177,11 @@ function applyPalletStep(state, row) {
   // 2. Ensure consts after imports, before first pattern
   if (consts && !code.includes(consts)) {
     const insertAt = findFirstPatternOffset(code);
-    const insert = (insertAt > 0 && code[insertAt - 1] !== '\n' ? '\n' : '') + consts + '\n';
+    const needLeadingNewline = insertAt > 0 && code.length >= insertAt && code[insertAt - 1] !== '\n';
+    const insert = (needLeadingNewline ? '\n' : '') + consts + '\n';
     code = code.slice(0, insertAt) + insert + code.slice(insertAt);
-    if (cursor >= insertAt) cursor += insert.length;
+    if (cursor <= insertAt) cursor = insertAt + insert.length;
+    else cursor += insert.length;
   }
 
   // 3. Insert or wrap
@@ -199,7 +201,9 @@ function applyPalletStep(state, row) {
   } else {
     const before = code.slice(0, cursor);
     const snippet = rowCode;
-    const insert = needsLeadingComma(before) ? ',\n  ' + snippet : snippet;
+    const lastLine = before.trim().split('\n').pop() || '';
+    const afterPrelude = !before.trim() || isPreludeLine(lastLine);
+    const insert = needsLeadingComma(before) && !afterPrelude ? ',\n  ' + snippet : snippet;
     code = code.slice(0, cursor) + insert + code.slice(cursor);
     cursor += insert.length;
     const beforeLint = code;

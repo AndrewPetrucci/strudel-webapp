@@ -66,6 +66,21 @@ describe('Pallet buttons: Add Stack, Add Erika Base, Add Gamepad', () => {
   });
 });
 
+const EXPECTED_ADD_GAMEPAD_ONLY =
+`const gp = gamepad(0)
+note("c a f e").mask(gp.a)`;
+
+describe('Pallet button: Add Gamepad only (empty editor)', () => {
+  it('adds gamepad const and pattern', () => {
+    const actual = runPalletSequence(['add-gamepad']);
+    assert.strictEqual(
+      actual,
+      EXPECTED_ADD_GAMEPAD_ONLY,
+      'Output should match expected. Diff:\n' + diffLines(EXPECTED_ADD_GAMEPAD_ONLY, actual)
+    );
+  });
+});
+
 function diffLines(a, b) {
   const al = a.split('\n');
   const bl = b.split('\n');

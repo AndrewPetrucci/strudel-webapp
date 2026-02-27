@@ -11,3 +11,9 @@ add-drum-stack-1,Add Drum Stack 1,"stack(
 add-noise-snare,Add Noise Snare,"sound(""bd*2,<white pink brown>*8"")
 .decay(.04).sustain(0)._scope()",0,0,,
 add-gamepad,Add Gamepad,"note(""c a f e"").mask(gp.a)",0,0,,"const gp = gamepad(0)"
+add-drum-sequencer,Add Drum Sequencer,"sound(`
+[-  -  oh - ] [-  -  -  - ] [-  -  -  - ] [-  -  -  - ],
+[hh hh -  - ] [hh -  hh - ] [hh -  hh - ] [hh -  hh - ],
+[-  -  -  - ] [cp -  -  - ] [-  -  -  - ] [cp -  -  - ],
+[bd -  -  - ] [-  -  -  bd] [-  -  bd - ] [-  -  -  bd]
+`)",0,0,,

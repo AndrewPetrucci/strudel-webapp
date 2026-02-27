@@ -175,10 +175,33 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }, 1000);
 
+  /** Clear all content from the Strudel editor. */
+  function clearEditor() {
+    const editor = getEditor();
+    if (!editor) return;
+    if (editor.setCode) {
+      editor.setCode('');
+    } else {
+      const cm = editor?.editor;
+      if (cm?.state) {
+        const len = cm.state.doc.length;
+        cm.dispatch({ changes: { from: 0, to: len, insert: '' }, selection: { anchor: 0, head: 0 } });
+      }
+    }
+  }
+
   /** Load palette buttons from CSV and append to container. Uses palletLogic.parseCSV and applyPalletRowToEditor. */
   async function loadPalletButtons() {
     if (!palletButtonsContainer || !window.palletLogic) return;
     try {
+      const clearBtn = document.createElement('button');
+      clearBtn.type = 'button';
+      clearBtn.id = 'clear-btn';
+      clearBtn.className = 'pallet-btn';
+      clearBtn.title = 'Clear';
+      clearBtn.textContent = 'Clear';
+      clearBtn.addEventListener('click', clearEditor);
+      palletButtonsContainer.appendChild(clearBtn);
       const res = await fetch('pallet-buttons.csv');
       const text = await res.text();
       const rows = window.palletLogic.parseCSV(text);

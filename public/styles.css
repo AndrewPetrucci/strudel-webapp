@@ -140,6 +140,10 @@ main > div {
   min-height: 500px;
 }
 
+.repl-container > div {
+  min-height: 100%;
+}
+
 .repl-container strudel-editor {
   display: none;
   width: 100%;
