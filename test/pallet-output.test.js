@@ -35,18 +35,6 @@ const EXPECTED_OUTPUT =
     sound("bd*4,[~ sd:1]*2")
   )
 )`;
-
-describe('Pallet buttons: Add Stack, Add Erika Base, Add Drum Stack 1', () => {
-  it('produces correct spacing and newlines', () => {
-    const actual = runPalletSequence(['add-stack', 'add-erika-base', 'add-drum-stack-1']);
-    assert.strictEqual(
-      actual,
-      EXPECTED_OUTPUT,
-      'Output should match expected spacing and newlines. Diff:\n' + diffLines(EXPECTED_OUTPUT, actual)
-    );
-  });
-});
-
 const EXPECTED_ADD_STACK_ERIKA_GAMEPAD =
 `const gp = gamepad(0)
 stack(
@@ -55,30 +43,60 @@ stack(
   note("c a f e").mask(gp.a)
 )`;
 
-describe('Pallet buttons: Add Stack, Add Erika Base, Add Gamepad', () => {
-  it('produces correct output with consts and stack content', () => {
-    const actual = runPalletSequence(['add-stack', 'add-erika-base', 'add-gamepad']);
-    assert.strictEqual(
-      actual,
-      EXPECTED_ADD_STACK_ERIKA_GAMEPAD,
-      'Output should match expected. Diff:\n' + diffLines(EXPECTED_ADD_STACK_ERIKA_GAMEPAD, actual)
-    );
-  });
-});
 
 const EXPECTED_ADD_GAMEPAD_ONLY =
 `const gp = gamepad(0)
 note("c a f e").mask(gp.a)`;
 
-describe('Pallet button: Add Gamepad only (empty editor)', () => {
-  it('adds gamepad const and pattern', () => {
-    const actual = runPalletSequence(['add-gamepad']);
-    assert.strictEqual(
-      actual,
-      EXPECTED_ADD_GAMEPAD_ONLY,
-      'Output should match expected. Diff:\n' + diffLines(EXPECTED_ADD_GAMEPAD_ONLY, actual)
-    );
-  });
+const EXPECTED_ADD_WALKING_PIANO =
+`setcpm(60)
+n("<0 -3>, 2 4 <[6,8] [7,9]>")
+  .scale("<C:major D:mixolydian>/4")
+  .sound("piano")`;
+
+const EXPECTED_ADD_SW_AMBIENT =
+`samples('github:switchangel/pad')
+samples('github:tidalcycles/dirt-samples')
+
+stack(
+  s("breaks125").fit().slice([0,.25,.5,.75], "0 1 1 <2 3>").gain(.2),
+  s("swpad:0").scrub("{0.1!2 .25@3 0.7!2 <0.8:1.5>}%8").slow(8).gain(.2)
+)`
+
+const palletButtonTestCases = [
+  {
+    buttonIds: ['add-stack', 'add-erika-base', 'add-drum-stack-1'],
+    expected: EXPECTED_OUTPUT,
+  },
+  {
+    buttonIds: ['add-stack', 'add-erika-base', 'add-gamepad'],
+    expected: EXPECTED_ADD_STACK_ERIKA_GAMEPAD,
+  },
+  {
+    buttonIds: ['add-gamepad'],
+    expected: EXPECTED_ADD_GAMEPAD_ONLY,
+  },
+  {
+    buttonIds: ['add-walking-piano'],
+    expected: EXPECTED_ADD_WALKING_PIANO,
+  },
+  {
+    buttonIds: ['add-stack', 'add-dirt-drums', 'add-sw-ambient'],
+    expected: EXPECTED_ADD_SW_AMBIENT,
+  },
+];
+
+describe('palletButtonTestCases', () => {
+  for (const testCase of palletButtonTestCases) {
+    it(`produces correct output for ${testCase.buttonIds.join(', ')}`, () => {
+      const actual = runPalletSequence(testCase.buttonIds);
+      assert.strictEqual(
+        actual,
+        testCase.expected,
+        'Output should match expected. Diff:\n' + diffLines(testCase.expected, actual)
+      );
+    });
+  }
 });
 
 function diffLines(a, b) {

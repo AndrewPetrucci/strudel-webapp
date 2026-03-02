@@ -17,3 +17,31 @@ add-drum-sequencer,Add Drum Sequencer,"sound(`
 [-  -  -  - ] [cp -  -  - ] [-  -  -  - ] [cp -  -  - ],
 [bd -  -  - ] [-  -  -  bd] [-  -  bd - ] [-  -  -  bd]
 `)",0,0,,
+add-walking-piano,Add Walking Piano,"n(""<0 -3>, 2 4 <[6,8] [7,9]>"")
+.scale(""<C:major D:mixolydian>/4"")
+.sound(""piano"")",0,0,,"setcpm(60)"
+add-dirt-drums,Add Dirt Drum,"s(""breaks125"").fit().slice([0,.25,.5,.75], ""0 1 1 <2 3>"").gain(.2)",0,0,"samples('github:tidalcycles/dirt-samples')",
+add-sw-ambient,Add SW Ambient,"s(""swpad:0"").scrub(""{0.1!2 .25@3 0.7!2 <0.8:1.5>}%8"").slow(8).gain(.2)",0,0,"samples('github:switchangel/pad')",
+add-adsr-saw,Add ADSR Saw,"note(""c3 bb2 f3 eb3"")
+.sound(""sawtooth"").lpf(600)
+.adsr("".1:.1:.5:.2"")",0,0,,
+add-delay-drum,Add Delay Drum,"sound(""bd rim"").bank(""RolandTR707"").delay("".5"")",0,0,,
+add-pan-numbers,Add Pan Numbers,"sound(""numbers:1 numbers:2 numbers:3 numbers:4"").pan(""0 0.3 .6 1"")",0,0,,
+add-xy-triad, Add Xy triad,"n(""0 [2 4] <3 5> [~ <4 1>]"".add(""<0 [0,2,4]>""))
+.scale(""C5:minor"").release(.5)
+.sound(""gm_xylophone"").room(.5)",0,0,,
+add-arp,Add Arp,"n(""0 2 4 7"").scale(""C:minor"").clip(2).s(""gm_electric_guitar_clean"")",0,0,,
+add-chopped-break,Add Chopped Break,"s(""amen/4"").fit().chop(32)",0,0,"samples('github:yaxu/clean-breaks')",
+add-squanch-base,Add Squanch Base,"note(""g1 bb1 <c2 eb2> d2"")
+.s(""sawtooth"")
+.lpf(400).lpenv(4)",0,0,,
+add-buzz-saw,Add Buzz Saw,"note(""<g1 bb1 d2 f1>"")
+.s(""sawtooth, square"")",0,0,,
+add-detune-saw,Add Detune Saw,"note(""<g1 bb1 d2 f1>"")
+.add(note(""0,.1""))
+.s(""sawtooth"")",0,0,,
+add-polyrythm,Add Polyrythm,"s(""bd*2,hh*3"")",0,0,,
+add-polymeter,Add Polymeter,"s(""<bd rim, hh hh oh>*4"")",0,0,,
+add-ambient-base,Add Ambient Base,"note(""c2*8"").s(""wt_dbass"").n(run(8))
+.lpf(perlin.range(100,1000).slow(8))
+.lpenv(-3).lpa(.1).room(.5).fast(2)",0,0,samples('github:bubobubobubobubo/dough-waveforms'),

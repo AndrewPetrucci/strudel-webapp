@@ -169,7 +169,9 @@ function applyPalletStep(state, row) {
 
   // 1. Ensure imports at top
   if (imports && !code.includes(imports)) {
-    const insert = imports + (code.length && !code.startsWith('\n') ? '\n\n' : '\n');
+    const codeTrimmed = code.trimStart();
+    const nextIsImport = /^\s*samples\s*\(/.test(codeTrimmed);
+    const insert = imports + (code.length && !code.startsWith('\n') && !nextIsImport ? '\n\n' : '\n');
     code = insert + code;
     cursor += insert.length;
   }
@@ -201,9 +203,14 @@ function applyPalletStep(state, row) {
   } else {
     const before = code.slice(0, cursor);
     const snippet = rowCode;
+    const lines = before.split('\n');
+    const lastRaw = lines[lines.length - 1] || '';
     const lastLine = before.trim().split('\n').pop() || '';
-    const afterPrelude = !before.trim() || isPreludeLine(lastLine);
-    const insert = needsLeadingComma(before) && !afterPrelude ? ',\n  ' + snippet : snippet;
+    const lastLineTrimmed = lastLine.trim();
+    const endsWithCall = /\)\s*$/.test(lastLineTrimmed) && !lastLineTrimmed.startsWith('.');
+    const lastLineIndented = /^\s/.test(lastRaw);
+    const afterCompleteStatement = !before.trim() || isPreludeLine(lastLine) || (endsWithCall && !lastLineIndented);
+    const insert = needsLeadingComma(before) && !afterCompleteStatement ? ',\n  ' + snippet : snippet;
     code = code.slice(0, cursor) + insert + code.slice(cursor);
     cursor += insert.length;
     const beforeLint = code;
