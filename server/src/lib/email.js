@@ -15,6 +15,22 @@ const transporter = nodemailer.createTransport({
 const FROM = process.env.SMTP_FROM || process.env.SMTP_USER || 'noreply@localhost'
 const APP_URL = process.env.APP_URL || 'http://localhost:3000'
 
+/** Log email send failure with safe SMTP config (no passwords) for debugging prod issues */
+export function logEmailFailure(context, err) {
+  const smtpHost = process.env.SMTP_HOST ?? '(not set)'
+  const smtpPort = process.env.SMTP_PORT ?? '(default 587)'
+  const smtpAuth = !!(process.env.SMTP_USER && process.env.SMTP_PASS)
+  console.error(`[email] ${context} failed:`, {
+    message: err.message,
+    code: err.code,
+    ...(err.response ? { response: String(err.response).slice(0, 200) } : {}),
+    smtp: { host: smtpHost, port: smtpPort, authConfigured: smtpAuth },
+  })
+  if (err.stack && process.env.NODE_ENV !== 'production') {
+    console.error(err.stack)
+  }
+}
+
 export async function sendVerificationEmail(email, token) {
   const url = `${APP_URL}/verify-email?token=${encodeURIComponent(token)}`
   await transporter.sendMail({

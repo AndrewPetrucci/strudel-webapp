@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 import validator from 'validator'
 import { pool } from '../../db.js'
 import { optionalAuth } from '../../middleware/auth.js'
-import { sendVerificationEmail, sendPasswordResetEmail, sendTestEmail } from '../../lib/email.js'
+import { sendVerificationEmail, sendPasswordResetEmail, sendTestEmail, logEmailFailure } from '../../lib/email.js'
 
 const router = Router()
 const JWT_SECRET = process.env.JWT_SECRET || 'change-me-in-production'
@@ -55,7 +55,7 @@ router.post('/signup', async (req, res) => {
     try {
       await sendVerificationEmail(email, verifyToken)
     } catch (err) {
-      console.error('Send verification email failed:', err.message)
+      logEmailFailure('Send verification email', err)
     }
 
     res.status(201).json({ user: toUser(user), message: 'Check your email to set your password' })
@@ -154,6 +154,47 @@ router.post('/verify-email', async (req, res) => {
   }
 })
 
+/** POST /api/auth/resend-verification — body: { email } or { login }. Resends verification email if user exists and has no password set. */
+router.post('/resend-verification', async (req, res) => {
+  const raw = String(req.body.email || req.body.login || '').trim()
+  if (!raw) {
+    return res.status(400).json({ error: 'Email or username is required' })
+  }
+  const isEmail = raw.includes('@') && validator.isEmail(raw)
+  const email = isEmail ? validator.normalizeEmail(raw) : null
+  const username = !isEmail ? raw.toLowerCase() : null
+
+  try {
+    const { rows } = await pool.query(
+      email
+        ? 'SELECT id, email, password_hash FROM users WHERE email = $1'
+        : 'SELECT id, email, password_hash FROM users WHERE username = $1',
+      [email ?? username]
+    )
+    const user = rows[0]
+    if (!user) {
+      return res.json({ message: 'If that account exists and is unverified, you will receive a new verification link.' })
+    }
+    if (user.password_hash) {
+      return res.json({ message: 'If that account exists and is unverified, you will receive a new verification link.' })
+    }
+    const verifyToken = jwt.sign(
+      { sub: user.id, email: user.email, purpose: 'email_verification' },
+      JWT_SECRET,
+      { expiresIn: VERIFY_EXP }
+    )
+    try {
+      await sendVerificationEmail(user.email, verifyToken)
+    } catch (err) {
+      logEmailFailure('Resend verification email', err)
+    }
+    return res.json({ message: 'Verification email sent. Check your inbox.' })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Request failed' })
+  }
+})
+
 /** POST /api/auth/forgot-password */
 router.post('/forgot-password', async (req, res) => {
   const email = validator.normalizeEmail(String(req.body.email || '').trim())
@@ -171,7 +212,7 @@ router.post('/forgot-password', async (req, res) => {
       try {
         await sendPasswordResetEmail(rows[0].email, resetToken)
       } catch (err) {
-        console.error('Send reset email failed:', err.message)
+        logEmailFailure('Send password reset email', err)
       }
     }
     res.json({ message: 'If that email is registered, you will receive a reset link' })

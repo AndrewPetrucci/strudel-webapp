@@ -5,16 +5,23 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { setToken } from '@/lib/auth'
 
+const UNVERIFIED_MESSAGE = 'Please verify your email and set your password first'
+
 export default function Login() {
   const [login, setLogin] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [resendMessage, setResendMessage] = useState('')
+  const [resending, setResending] = useState(false)
   const router = useRouter()
+
+  const showResend = error === UNVERIFIED_MESSAGE
 
   async function handleSubmit(e) {
     e.preventDefault()
     setError('')
+    setResendMessage('')
     setLoading(true)
     try {
       const res = await fetch('/api/auth/login', {
@@ -30,6 +37,25 @@ export default function Login() {
       setError(err.message)
     } finally {
       setLoading(false)
+    }
+  }
+
+  async function handleResendVerification(e) {
+    e.preventDefault()
+    setResendMessage('')
+    setResending(true)
+    try {
+      const res = await fetch('/api/auth/resend-verification', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: login, login }),
+      })
+      const data = await res.json()
+      setResendMessage(data.message || 'Check your email.')
+    } catch (err) {
+      setResendMessage(err.message || 'Failed to resend.')
+    } finally {
+      setResending(false)
     }
   }
 
@@ -59,6 +85,20 @@ export default function Login() {
             />
           </label>
           {error && <p className="auth-error">{error}</p>}
+          {showResend && (
+            <p className="auth-hint" style={{ marginTop: '0.5rem' }}>
+              Didn&apos;t get the email?{' '}
+              <button
+                type="button"
+                className="auth-inline-link"
+                onClick={handleResendVerification}
+                disabled={resending}
+              >
+                {resending ? 'Sending…' : 'Resend verification email'}
+              </button>
+            </p>
+          )}
+          {resendMessage && <p className="auth-hint" style={{ marginTop: '0.5rem', color: 'var(--accent)' }}>{resendMessage}</p>}
           <button type="submit" disabled={loading}>
             {loading ? 'Signing in…' : 'Sign in'}
           </button>
