@@ -19,7 +19,7 @@ add-drum-sequencer,Add Drum Sequencer,"sound(`
 `)",0,0,,,drums
 add-walking-piano,Add Walking Piano,"n(""<0 -3>, 2 4 <[6,8] [7,9]>"")
 .scale(""<C:major D:mixolydian>/4"")
-.sound(""piano"")",0,0,,"setcpm(60)",synth
+.sound(""piano"").fast(2)",0,0,,,synth
 add-dirt-drums,Add Dirt Drum,"s(""breaks125"").fit().slice([0,.25,.5,.75], ""0 1 1 <2 3>"").gain(.2)",0,0,"samples('github:tidalcycles/dirt-samples')",,samples
 add-sw-ambient,Add SW Ambient,"s(""swpad:0"").scrub(""{0.1!2 .25@3 0.7!2 <0.8:1.5>}%8"").slow(8).gain(.2)",0,0,"samples('github:switchangel/pad')",,samples
 add-adsr-saw,Add ADSR Saw,"note(""c3 bb2 f3 eb3"")

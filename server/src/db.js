@@ -1,5 +1,7 @@
 import pg from 'pg'
 import * as buttonsSchema from './schema/buttons/index.js'
+import * as songsSchema from './schema/songs/index.js'
+import * as usersSchema from './schema/users/index.js'
 
 const { Pool } = pg
 
@@ -9,6 +11,18 @@ const tableSchemas = [
     tableName: buttonsSchema.tableName,
     seedColumns: buttonsSchema.seedColumns,
     seedRows: buttonsSchema.seedRows ?? [],
+  },
+  {
+    createTableSql: usersSchema.createTableSql,
+    tableName: usersSchema.tableName,
+    seedColumns: null,
+    seedRows: [],
+  },
+  {
+    createTableSql: songsSchema.createTableSql,
+    tableName: songsSchema.tableName,
+    seedColumns: songsSchema.seedColumns,
+    seedRows: songsSchema.seedRows ?? [],
   },
 ]
 
@@ -62,6 +76,22 @@ export async function ensureDatabase() {
 export async function ensureSchema() {
   for (const { createTableSql, tableName, seedColumns, seedRows } of tableSchemas) {
     await pool.query(createTableSql)
+    if (tableName === usersSchema.tableName) {
+      try {
+        await pool.query('ALTER TABLE users ALTER COLUMN password_hash DROP NOT NULL')
+      } catch (_) {}
+      try {
+        await pool.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS username VARCHAR(50) UNIQUE')
+      } catch (_) {}
+      try {
+        await pool.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS email_verified_at TIMESTAMPTZ')
+      } catch (_) {}
+    }
+    if (tableName === songsSchema.tableName) {
+      try {
+        await pool.query(`ALTER TABLE ${tableName} ADD COLUMN IF NOT EXISTS user_id INTEGER REFERENCES users(id)`)
+      } catch (_) {}
+    }
     if (seedColumns?.length && seedRows?.length) {
       const { rows } = await pool.query(`SELECT 1 FROM ${tableName} LIMIT 1`)
       if (rows.length === 0) {

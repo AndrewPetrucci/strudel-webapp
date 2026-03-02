@@ -34,6 +34,46 @@ header {
   flex-wrap: wrap;
 }
 
+.header-left {
+  flex-shrink: 0;
+}
+
+.header-left h1 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+  color: var(--text);
+}
+
+.header-subtitle {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.header-docs-link {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.header-docs-link:hover {
+  text-decoration: underline;
+}
+
+.header-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+}
+
+.header-right {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
 .header-buttons {
   display: flex;
   gap: 0.5rem;
@@ -71,6 +111,144 @@ header {
 .update-btn {
   color: white;
   background: #0d9488;
+}
+
+.save-btn {
+  color: white;
+  background: #059669;
+}
+
+.header-user {
+  font-size: 0.9rem;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.signout-link {
+  padding: 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  background: none;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.signout-link:hover {
+  text-decoration: underline;
+}
+
+.auth-header-btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.auth-header-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Auth pages */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.auth-card {
+  background: var(--surface);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 2rem;
+  width: 100%;
+  max-width: 360px;
+}
+
+.auth-card h1 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.auth-card label {
+  display: block;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.auth-card input {
+  display: block;
+  width: 100%;
+  margin-top: 0.35rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.95rem;
+  background: var(--bg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: var(--text);
+}
+
+.auth-card input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.auth-card button[type="submit"] {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: var(--accent);
+  color: white;
+  margin-top: 0.5rem;
+}
+
+.auth-card button[type="submit"]:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+.auth-card button[type="submit"]:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.auth-error {
+  color: #b91c1c;
+  font-size: 0.9rem;
+  margin: 0.5rem 0;
+}
+
+.auth-hint {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: -0.5rem 0 0.5rem;
+}
+
+.auth-link {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.auth-link a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.auth-link a:hover {
+  text-decoration: underline;
 }
 
 header h1 {
@@ -126,8 +304,74 @@ main > div {
   background: var(--accent);
 }
 
+.pallet-buttons button.clear-btn {
+  background: #b91c1c;
+}
+
+.pallet-buttons button.pattern-btn {
+  background: #2563eb;
+}
+
 .pallet-buttons button:hover {
   filter: brightness(1.1);
+}
+
+/* Reusable toggle button (segmented control) - override .pallet-buttons button so unselected is muted */
+.pallet-buttons .toggle-button .toggle-button-btn,
+.pallet-buttons .mode-toggle .mode-toggle-btn {
+  background: var(--surface);
+  color: var(--muted);
+}
+
+.pallet-buttons .toggle-button .toggle-button-btn.active,
+.pallet-buttons .mode-toggle .mode-toggle-btn.active {
+  background: var(--accent);
+  color: white;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.25);
+  font-weight: 700;
+}
+
+.pallet-buttons.mode-patterns .toggle-button .toggle-button-btn.active,
+.pallet-buttons.mode-patterns .mode-toggle .mode-toggle-btn.active {
+  background: #2563eb;
+}
+
+.toggle-button,
+.mode-toggle {
+  display: flex;
+  gap: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.toggle-button-btn,
+.mode-toggle-btn {
+  flex: 1;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  background: var(--surface);
+  color: var(--muted);
+  transition: background 0.15s, color 0.15s;
+}
+
+.toggle-button-btn:first-child,
+.mode-toggle-btn:first-child {
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px 0 0 8px;
+}
+
+.toggle-button-btn:last-child,
+.mode-toggle-btn:last-child {
+  border-radius: 0 8px 8px 0;
+}
+
+.toggle-button-btn:hover,
+.mode-toggle-btn:hover {
+  color: var(--text);
 }
 
 .repl-container {
@@ -148,4 +392,142 @@ main > div {
   display: none;
   width: 100%;
   min-height: 500px;
+}
+
+/* Save song modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: var(--surface);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  max-width: 560px;
+  width: 90%;
+  max-height: 90vh;
+  overflow: auto;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.modal-header h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0 0.25rem;
+  line-height: 1;
+}
+
+.modal-close:hover {
+  color: var(--text);
+}
+
+.modal-body {
+  padding: 1.25rem;
+}
+
+.modal-message {
+  margin-bottom: 0.5rem;
+}
+
+.modal-hint {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.save-form label {
+  display: block;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.save-form input,
+.save-form textarea {
+  display: block;
+  width: 100%;
+  margin-top: 0.35rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.95rem;
+  background: var(--bg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: var(--text);
+  font-family: inherit;
+}
+
+.save-form textarea {
+  font-family: ui-monospace, monospace;
+  resize: vertical;
+  min-height: 120px;
+}
+
+.save-form input:focus,
+.save-form textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.save-form input[readonly] {
+  opacity: 0.8;
+  cursor: default;
+}
+
+.save-error {
+  color: #b91c1c;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.modal-actions button {
+  padding: 0.5rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text);
+}
+
+.modal-actions button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.save-submit-btn,
+.save-as-new-btn {
+  background: var(--accent) !important;
+  color: white !important;
+}
+
+.modal-actions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }

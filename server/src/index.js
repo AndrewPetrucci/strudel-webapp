@@ -6,6 +6,8 @@ import { existsSync } from 'fs'
 import { fileURLToPath } from 'url'
 import { ensureDatabase, ensureSchema } from './db.js'
 import buttonsRouter from './routes/buttons/index.js'
+import songsRouter from './routes/songs/index.js'
+import authRouter from './routes/auth/index.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const app = express()
@@ -15,6 +17,8 @@ app.use(cors())
 app.use(express.json())
 
 app.use('/api/buttons', buttonsRouter)
+app.use('/api/songs', songsRouter)
+app.use('/api/auth', authRouter)
 
 app.get('/api/health', (_, res) => {
   res.json({ status: 'ok' })
