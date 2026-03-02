@@ -21,6 +21,15 @@ function getEditor(replEl) {
   return replEl?.editor ?? null
 }
 
+const DEFAULT_EDITOR_CODE = `stack(
+  note("<[c2 c3]*4 [bb1 bb2]*4 [f2 f3]*4 [eb2 eb3]*4>")
+    .sound("sawtooth").lpf(800),
+  stack(
+    sound("hh*16").gain("[.25 1]*4"),
+    sound("bd*4,[~ sd:1]*2")
+  )
+)`
+
 export default function Home() {
   const replRef = useRef(null)
   const [buttons, setButtons] = useState([])
@@ -153,7 +162,7 @@ export default function Home() {
               })}
           </div>
           <section className="repl-container">
-            <strudel-editor id="strudel-repl" ref={replRef} />
+            <strudel-editor id="strudel-repl" ref={replRef} code={DEFAULT_EDITOR_CODE} />
           </section>
         </div>
       </main>
