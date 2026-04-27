@@ -13,7 +13,22 @@ const transporter = nodemailer.createTransport({
 })
 
 const FROM = process.env.SMTP_FROM || process.env.SMTP_USER || 'noreply@localhost'
-const APP_URL = process.env.APP_URL || 'http://localhost:3000'
+
+function getAppOrigin() {
+  const protocol = (process.env.APP_PROTOCOL || 'http').replace(/:?\/?\/?$/, '')
+  const host = process.env.APP_HOST || 'localhost'
+  let port = process.env.APP_PORT
+  if (port === undefined || port === '') {
+    port = 3000
+  } else {
+    port = Number(port)
+    if (!Number.isFinite(port)) port = 3000
+  }
+  const omitPort =
+    (protocol === 'http' && port === 80) || (protocol === 'https' && port === 443)
+  const origin = omitPort ? `${protocol}://${host}` : `${protocol}://${host}:${port}`
+  return origin.replace(/\/+$/, '')
+}
 
 /** Log email send failure with safe SMTP config (no passwords) for debugging prod issues */
 export function logEmailFailure(context, err) {
@@ -32,7 +47,7 @@ export function logEmailFailure(context, err) {
 }
 
 export async function sendVerificationEmail(email, token) {
-  const url = `${APP_URL}/verify-email?token=${encodeURIComponent(token)}`
+  const url = `${getAppOrigin()}/verify-email?token=${encodeURIComponent(token)}`
   await transporter.sendMail({
     from: FROM,
     to: email,
@@ -43,7 +58,7 @@ export async function sendVerificationEmail(email, token) {
 }
 
 export async function sendPasswordResetEmail(email, token) {
-  const url = `${APP_URL}/reset-password?token=${encodeURIComponent(token)}`
+  const url = `${getAppOrigin()}/reset-password?token=${encodeURIComponent(token)}`
   await transporter.sendMail({
     from: FROM,
     to: email,
